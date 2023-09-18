@@ -1,27 +1,27 @@
-abstract type Source
+abstract type AbstractSource
 end
 
-function CalEinc(D::Dipole, S::Source)
+function CalEinc(D::Dipole, S::T) where {T<:AbstractSource}
     D.Einc += S.Green(D.pos)
 end
 
-function CalEinc(R::Recorder, S::Source)
+function CalEinc(R::Recorder, S::T) where {T<:AbstractSource}
     R.E += S.Green(R.pos)
 end
 
-function CalEinc(Rec::Array{Recorder}, S::Source)
+function CalEinc(Rec::Array{Recorder}, S::T) where {T<:AbstractSource}
     for R in Rec
         R.E += S.Green(R.pos)
     end
 end
 
-function CalEinc(str::Union{Structure, Container}, S::Source)
+function CalEinc(str::Union{Structure,Container}, S::T) where {T<:AbstractSource}
     for D in str.Dipoles
         CalEinc(D, S)
     end
 end
 
-struct PlaneWave <: Source
+struct PlaneWave <: AbstractSource
     Green :: Function
 end 
 
@@ -33,7 +33,7 @@ function PlaneWave(k::SVector{3}, 𝔼inc::SVector{3}; r0=SA[0., 0., 0.])
     return PlaneWave(Green)
 end
 
-struct DipoleSource <: Source
+struct DipoleSource <: AbstractSource
     Green :: Function
 end
 

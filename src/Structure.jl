@@ -1,7 +1,7 @@
-abstract type Structure
+abstract type AbsractStructure
 end
 
-function Base.getproperty(S::T, sym::Symbol) where T <: Structure
+function Base.getproperty(S::T, sym::Symbol) where {T<:AbsractStructure}
     if sym in [:x, :y, :z, 
         :r, :θ, :ϕ, 
         :Px, :Py, :Pz, 
@@ -14,14 +14,14 @@ function Base.getproperty(S::T, sym::Symbol) where T <: Structure
     end
 end
 
-function reset_dipoles(S::T) where T <: Structure
+function reset_dipoles(S::T) where {T<:AbsractStructure}
     for dip in S.Dipoles
         dip.Einc = SA[0+0im, 0+0im, 0+0im]
         dip.P = nothing
     end
 end
 
-mutable struct CustomStructure <: Structure
+mutable struct CustomStructure <: AbsractStructure
 
     Dipoles :: Vector{Dipole}
     name :: String
@@ -32,7 +32,7 @@ mutable struct CustomStructure <: Structure
 
 end
 
-mutable struct Sphere <: Structure
+mutable struct Sphere <: AbsractStructure
 
     radius :: Real
     n_per_dim :: Int
@@ -78,7 +78,7 @@ mutable struct Sphere <: Structure
     end
 end
 
-mutable struct Box <: Structure
+mutable struct Box <: AbstarctStructure
 
     x :: Number
     y :: Number
@@ -129,7 +129,7 @@ mutable struct Box <: Structure
     end
 end
 
-mutable struct Plane <: Structure
+mutable struct Plane <: AbstarctStructure
 
     xsize :: Number
     ysize :: Number

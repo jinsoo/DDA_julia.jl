@@ -1,10 +1,10 @@
 mutable struct Recorder
-    pos :: SVector{3}
+    pos :: SVector{3, Float64}
     E :: SVector{3, ComplexF32}
 end
 
 function Recorder(pos::SVector{3})
-    return Recorder(pos, SA[0+0im,0+0im,0+0im])
+    return Recorder(pos, SA[0. + 0im, 0. + 0im, 0. + 0im])
 end
 
 function Recorder(x::Real, y::Real, z::Real)
@@ -46,7 +46,7 @@ function SphericalRecorder(θlist::Vector, ϕlist::Vector; R=1e10)
             x = R * sin(θ) * cos(ϕ)
             y = R * sin(θ) * sin(ϕ)
             z = R * cos(θ)
-            recorders[i, j] = Recorder(SA[x,y,z], SA[0+0im,0+0im,0+0im])
+            @inbounds recorders[i, j] = Recorder(SA[x,y,z], SA[0. + 0im, 0. + 0im, 0. + 0im])
         end
     end
     return recorders
@@ -73,7 +73,7 @@ function PlaneRecorder(xlist::Vector, ylist::Vector, z=0; θ=0, ϕ=0)
             x = x*cos(θ)*cos(ϕ) - y*cos(θ)*sin(ϕ) + z*sin(θ)
             y = x*sin(ϕ) + y*cos(ϕ)
             z = -x*sin(θ)*cos(ϕ) + y*sin(θ)*sin(ϕ) + z*cos(θ)
-            recorders[i, j] = Recorder(SA[x,y,z], SA[0+0im,0+0im,0+0im])
+            @inbounds recorders[i, j] = Recorder(SA[x,y,z], SA[0. + 0im, 0. + 0im, 0. + 0im])
         end
     end
     return recorders
@@ -86,7 +86,7 @@ function SphericalUVRecorder(ulist::Vector, vlist::Vector; R=1e10)
             x = R * u
             y = R * v
             z = R * (1 .- (u .^ 2 .+ v .^2))
-            recorders[i, j] = Recorder(SA[x,y,z], SA[0+0im,0+0im,0+0im])
+            @inbounds recorders[i, j] = Recorder(SA[x,y,z], SA[0. + 0im, 0. + 0im, 0. + 0im])
         end
     end
     return recorders
@@ -128,7 +128,7 @@ function Power(Recorderlist::Array{Recorder}; n̂=nothing)
     Plist = zeros(size(Recorderlist))
     for (i, rec) in enumerate(Recorderlist)
         P = Power(rec; n̂=n̂)
-        Plist[i] = P
+        @inbounds Plist[i] = P
     end 
     return Plist
 end

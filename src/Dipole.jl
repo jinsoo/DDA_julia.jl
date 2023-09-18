@@ -10,15 +10,15 @@ mutable struct Dipole
     """
 
     pos :: SVector{3, Real} 
-    Einc :: Union{Nothing, SVector{3, ComplexF64}}  # Use Union{Nothing, ...} to allow for default values.
-    P :: Union{Nothing, SVector{3, ComplexF64}}
-    α :: Union{Nothing, SVector{3, ComplexF64}}
+    Einc :: Union{Nothing, SVector{3, ComplexF64}}  # Incident Electric field. Use Union{Nothing, ...} to allow for default values.
+    P :: Union{Nothing, SVector{3, ComplexF64}} # dipole moment
+    α :: Union{Nothing, SVector{3, ComplexF64}} # polarizability
 
     # Define a constructor for Dipole objects.
     function Dipole(pos; Einc=nothing, P=nothing, α=nothing)
         # Use isnothing() to check if optional arguments were passed.
         if isnothing(Einc)
-            Einc = SA[0+0im, 0+0im, 0+0im]
+            Einc = SA[0. + 0im, 0. + 0im, 0. + 0im]
         end
         # Use new() to create a new object with the specified fields.
         new(pos, Einc, P, α)
@@ -79,13 +79,13 @@ function Base.getproperty(Dipolelist::Array{Dipole}, sym::Symbol)
 end
 
 function reset_dipoles(D::Dipole)
-    D.Einc = SA[0+0im, 0+0im, 0+0im]
+    D.Einc = SA[0. + 0im, 0. + 0im, 0. + 0im]
     D.P = nothing
 end
 
 function reset_dipoles(Dipolelist::Array{Dipole})
     for dip in Dipolelist
-        dip.Einc = SA[0+0im, 0+0im, 0+0im]
+        dip.Einc = SA[0.0+0im, 0.0+0im, 0.0+0im]
         dip.P = nothing
     end
 end
